@@ -1,9 +1,13 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import HelloSerializer
+from .serializers import HelloSerializer, ProfileSerializer
 from rest_framework import status
 from rest_framework import viewsets
+from .models import *
+from rest_framework.authentication import TokenAuthentication
+from .permissions import *
+
 
 
 class HelloApiView(APIView):
@@ -54,6 +58,7 @@ class HelloApiView(APIView):
         return Response({"message": "DELETE"}) 
 
 
+# View Sets
 
 class HelloViewSet(viewsets.ViewSet):
     """Test API View Sets"""
@@ -62,6 +67,7 @@ class HelloViewSet(viewsets.ViewSet):
 
     def list(self, request):
         """Return a Hello Message"""
+
         viewset_data = [
             "First and Second",
             "Third and Fourth",
@@ -87,18 +93,28 @@ class HelloViewSet(viewsets.ViewSet):
 
     
     def update(self, request, pk=None):
-        """Handles updating an object"""
+        """ Handles updating an object """
         return Response({"http_method": "PUT"})
 
 
     def partial_update(self, request, pk=None):
-        """Handles updating part an object"""
+        """ Handles updating part an object """
         return Response({"http_method": "PATCH"})
 
 
     def destroy(self, request, pk=None):
-        """Handles deleting an object"""
+        """ Handles deleting an object """
         return Response({"http_method": "DELETE"})
+
+
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    """ Handle creating and updating a profile """
+    serializer_class = ProfileSerializer
+    queryset = UserProfile.objects.all()
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (UpdateOwnProfile, )
+
 
 
         
