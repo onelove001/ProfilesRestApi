@@ -1,13 +1,16 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import HelloSerializer, ProfileSerializer
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.settings import api_settings
 from rest_framework import status
+from rest_framework import filters
 from rest_framework import viewsets
 from .models import *
-from rest_framework.authentication import TokenAuthentication
 from .permissions import *
-from rest_framework import filters
+from .serializers import HelloSerializer, ProfileSerializer
+
 
 
 
@@ -123,6 +126,13 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     permission_classes = (UpdateOwnProfile, )
     filter_backends = (filters.SearchFilter, )
     search_fields = ("id", "first_name", "last_name", "email", )
+
+
+
+class UserLoginApiView(ObtainAuthToken):
+    """ Handle creating user authentication tokens """
+    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
+    
 
 
         
