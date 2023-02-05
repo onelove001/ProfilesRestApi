@@ -7,6 +7,7 @@ from rest_framework import viewsets
 from .models import *
 from rest_framework.authentication import TokenAuthentication
 from .permissions import *
+from rest_framework import filters
 
 
 
@@ -78,6 +79,7 @@ class HelloViewSet(viewsets.ViewSet):
     
     def create(self, request):
         """Create a new Hello Message for view-set"""
+
         serializer = self.serializer_class(data = request.data)
         if serializer.is_valid():
             name = serializer.validated_data.get("name")
@@ -89,32 +91,38 @@ class HelloViewSet(viewsets.ViewSet):
 
     def retrieve(self, request, pk=None):
         """Create a new Hello Message for view-set"""
+
         return Response({"http_method": "GET"})
 
     
     def update(self, request, pk=None):
         """ Handles updating an object """
+
         return Response({"http_method": "PUT"})
 
 
     def partial_update(self, request, pk=None):
         """ Handles updating part an object """
+
         return Response({"http_method": "PATCH"})
 
 
     def destroy(self, request, pk=None):
         """ Handles deleting an object """
+
         return Response({"http_method": "DELETE"})
 
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     """ Handle creating and updating a profile """
+
     serializer_class = ProfileSerializer
     queryset = UserProfile.objects.all()
     authentication_classes = (TokenAuthentication, )
     permission_classes = (UpdateOwnProfile, )
-
+    filter_backends = (filters.SearchFilter, )
+    search_fields = ("id", "first_name", "last_name", "email", )
 
 
         
