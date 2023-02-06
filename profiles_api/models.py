@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.conf import settings
 
 
 
@@ -8,6 +9,7 @@ class UserProfileManager(BaseUserManager):
 
     def create_user(self, email, first_name, last_name, password=None):
         """ Creates a new user profile """
+
         if not email:
             raise ValueError("User must have email address")
         email = self.normalize_email(email)
@@ -50,6 +52,19 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
 
     def __str__(self):
-        """ Retrieve String Representation of the user profile"""
+        """ Retrieve String Representation of the user profile """
         return self.email
+
+
+
+class ProfileFeeds(models.Model):
+    """ Profile Feeds Table """
+
+    user_profile = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    status_text = models.CharField(max_length=255)
+    created_on = models.DateTimeField(auto_now_add = True)
+
+    def __str__(self):
+        """ Return status text of the object """
+        return self.status_text
 

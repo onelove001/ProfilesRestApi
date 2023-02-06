@@ -9,6 +9,7 @@ app_name = "api"
 router = DefaultRouter()
 router.register("hello-viewset", HelloViewSet, basename="hello-viewset")
 router.register("profile", UserProfileViewSet, basename="profile-viewset")
+router.register("feeds", ProfileFeedViewSet, basename="profile-feed-viewset")
 
 urlpatterns = [
     path("hello-view/", HelloApiView.as_view(), name="Hello"),
